@@ -1,2 +1,1 @@
-# globpanelserver
-Server for GlobPanel.vercel.app
+# GlobPanel-Server

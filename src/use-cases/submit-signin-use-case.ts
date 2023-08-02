@@ -1,21 +1,29 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.SubmitSigninUseCase = void 0;
-class SubmitSigninUseCase {
-    constructor(SigninRepository, autoMailAdapter) {
-        this.SigninRepository = SigninRepository;
-        this.autoMailAdapter = autoMailAdapter;
-    }
-    async execute(request) {
-        const { name, email } = request;
-        await this.SigninRepository.create({
-            name,
-            email,
-        });
-        await this.autoMailAdapter.sendMain({
-            subject2: `Welcome! ${name} To The Newest Tools and Services Platform.`,
-            body2: [
-                `
+import { autoMailAdapter } from "../adapters/auto-mail-adapter";
+import { SigninRepository } from "../repositories/signin-repository";
+
+interface SubmitSigninUseCaseRequest {
+  name?: string;
+  email?: string;
+}
+
+export class SubmitSigninUseCase {
+  constructor(
+    private SigninRepository: SigninRepository,
+    private autoMailAdapter: autoMailAdapter
+  ) {}
+
+  async execute(request: SubmitSigninUseCaseRequest) {
+    const { name, email } = request;
+
+    await this.SigninRepository.create({
+      name,
+      email,
+    });
+
+    await this.autoMailAdapter.sendMain({
+      subject2: `Welcome! ${name} To The Newest Tools and Services Platform.`,
+      body2: [
+        `
             <!DOCTYPE html>
             <html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
             
@@ -826,10 +834,9 @@ class SubmitSigninUseCase {
             
             </html>
             `,
-            ].join("\n"),
-            detailname: `${name}`,
-            detailemail: `${email}`,
-        });
-    }
+      ].join("\n"),
+      detailname: `${name}`,
+      detailemail: `${email}`,
+    });
+  }
 }
-exports.SubmitSigninUseCase = SubmitSigninUseCase;
